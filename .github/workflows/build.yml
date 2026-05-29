@@ -201,7 +201,6 @@ jobs:
           ./scripts/config -e CONFIG_SECCOMP_FILTER
           ./scripts/config -e CONFIG_KEY_DH_OPERATIONS
           
-          ./scripts/kconfig/merge_config.sh -m .config my_config.cfg
           make kvm_guest.config
           make olddefconfig
           
