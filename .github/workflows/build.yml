@@ -201,6 +201,7 @@ jobs:
           ./scripts/config -e CONFIG_SECCOMP_FILTER
           ./scripts/config -e CONFIG_KEY_DH_OPERATIONS
           
+          ./scripts/kconfig/merge_config.sh -m .config my_config.cfg
           make kvm_guest.config
           make olddefconfig
           
@@ -210,9 +211,9 @@ jobs:
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
           make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
           
-          find /tmp/wsl_out/lib/modules -name "*.ko" -exec strip --strip-debug {} +
           find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
           find /tmp/wsl_out/lib/modules -name "source" -exec rm -rf {} +
+          find /tmp/wsl_out/lib/modules -name "*.ko" | xargs -P $(nproc) -I {} strip --strip-debug {}
           
           cd /tmp/wsl_out
           tar -cf - lib/ | pigz -p2 > modules.tar.gz
