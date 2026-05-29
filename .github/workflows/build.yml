@@ -35,7 +35,41 @@ jobs:
           
           make mrproper
           cp Microsoft/config-wsl .config
-          
+          ./scripts/config -e CONFIG_PACKET
+          ./scripts/config -e CONFIG_PACKET_DIAG
+          ./scripts/config -e CONFIG_FILTER
+          ./scripts/config -e CONFIG_NET_PKTGEN
+          ./scripts/config -e CONFIG_NETFILTER_NETLINK
+          ./scripts/config -e CONFIG_NETFILTER_NETLINK_ACCT
+          ./scripts/config -e CONFIG_NETFILTER_NETLINK_QUEUE
+          ./scripts/config -e CONFIG_NETFILTER_NETLINK_LOG
+          ./scripts/config -e CONFIG_NF_CT_NETLINK
+          ./scripts/config -e CONFIG_NF_LOG_NETDEV
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_BPF
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_CONNMARK
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_CONNLIMIT
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_IPRANGE
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_LENGTH
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_LIMIT
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_MAC
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_MARK
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_MULTIPORT
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_PKTTYPE
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_STATE
+          ./scripts/config -e CONFIG_NETFILTER_XT_TARGET_MASQUERADE
+          ./scripts/config -e CONFIG_NETFILTER_XT_TARGET_REDIRECT
+          ./scripts/config -e CONFIG_NETFILTER_XT_TARGET_LOG
+          ./scripts/config -e CONFIG_PRINTK_TIME
+          ./scripts/config -e CONFIG_PANIC_ON_OOPS
+          ./scripts/config -e CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
+          ./scripts/config -e CONFIG_WIREGUARD
+          ./scripts/config -e CONFIG_NF_NAT_MASQUERADE
+          ./scripts/config -e CONFIG_NF_NAT_REDIRECT
+          ./scripts/config -e CONFIG_NET_UDP_TUNNEL
+          ./scripts/config -e CONFIG_NET_TCPPROBE
+          ./scripts/config -e CONFIG_NETWORK_FILESYSTEMS
+          ./scripts/config -e CONFIG_F2FS_FS_COMPRESSION
+          ./scripts/config -e CONFIG_F2FS_STAT_FS
           ./scripts/config -e CONFIG_BLK_CGROUP
           ./scripts/config -e CONFIG_CGROUP_PERF
           ./scripts/config -e CONFIG_CGROUP_NET_CLASSID
@@ -44,14 +78,24 @@ jobs:
           ./scripts/config -e CONFIG_IP_VS
           ./scripts/config -e CONFIG_IP_VS_PROTO_TCP
           ./scripts/config -e CONFIG_IP_VS_PROTO_UDP
-          ./scripts/config -e CONFIG_HYPERV
-          ./scripts/config -e CONFIG_HYPERV_NET
-          ./scripts/config -e CONFIG_HYPERV_STORAGE
-          ./scripts/config -e CONFIG_HYPERV_BALLOON
-          ./scripts/config -e CONFIG_HYPERV_KEYBOARD
-          ./scripts/config -e CONFIG_HYPERV_MOUSE
-          ./scripts/config -e CONFIG_HYPERV_IOMMU
-          ./scripts/config -e CONFIG_HYPERV_TSCNEC
+          ./scripts/config -e CONFIG_BLK_CGROUP
+          ./scripts/config -e CONFIG_CGROUP_PERF
+          ./scripts/config -e CONFIG_CGROUP_NET_CLASSID
+          ./scripts/config -e CONFIG_NETFILTER_XT_TARGET_CONNMARK
+          ./scripts/config -e CONFIG_NETFILTER_XT_TARGET_NFQUEUE
+          ./scripts/config -e CONFIG_IP_VS
+          ./scripts/config -e CONFIG_IP_VS_PROTO_TCP
+          ./scripts/config -e CONFIG_IP_VS_PROTO_UDP
+          ./scripts/config --set-val CONFIG_HYPERV y
+          ./scripts/config --set-val CONFIG_HYPERV_NET y
+          ./scripts/config --set-val CONFIG_HYPERV_STORAGE y
+          ./scripts/config --set-val CONFIG_HYPERV_BALLOON y
+          ./scripts/config --set-val CONFIG_HYPERV_IOMMU y
+          ./scripts/config --set-val CONFIG_HYPERV_TSCNEC y
+          ./scripts/config --set-val CONFIG_EXT4_FS y
+          ./scripts/config --set-val CONFIG_9P_FS y
+          ./scripts/config --set-val CONFIG_SCHED_PRJC y
+          ./scripts/config --set-val CONFIG_PREEMPT_DYNAMIC y
           ./scripts/config -e CONFIG_MODULES
           ./scripts/config -e CONFIG_MODULE_UNLOAD
           ./scripts/config -e CONFIG_MODVERSIONS
@@ -63,6 +107,11 @@ jobs:
           ./scripts/config -e CONFIG_ZSTD_DECOMPRESS
           ./scripts/config -e CONFIG_PREEMPT_DYNAMIC
           ./scripts/config -e CONFIG_PREEMPT
+          ./scripts/config -e CONFIG_BLK_DEV_SD
+          ./scripts/config --set-val CONFIG_9P_FS_POSIX_ACL y
+          ./scripts/config --set-val CONFIG_9P_FS_SECURITY y
+          ./scripts/config -e CONFIG_SCSI
+          ./scripts/config -e CONFIG_NETDEVICES
           ./scripts/config -e CONFIG_HZ_1000
           ./scripts/config -e CONFIG_MCORE2
           ./scripts/config -e CONFIG_SCHED_AUTOGROUP
@@ -117,6 +166,11 @@ jobs:
           ./scripts/config -e CONFIG_SECURITY_SELINUX
           ./scripts/config -e CONFIG_DRM
           ./scripts/config -e CONFIG_DRM_VIRTIO_GPU
+          ./scripts/config -e CONFIG_USER_NS
+          ./scripts/config -e CONFIG_BRIDGE_VLAN_FILTERING
+          ./scripts/config -e CONFIG_NETFILTER_XT_MATCH_ADDRTYPE
+          ./scripts/config -e CONFIG_NF_NAT_IPV4
+          ./scripts/config -e CONFIG_NF_NAT_IPV6
           ./scripts/config -e CONFIG_MQ_IOSCHED_KYBER
           ./scripts/config -e CONFIG_IOSCHED_BFQ
           ./scripts/config -e CONFIG_BFQ_GROUP_IOSCHED
@@ -126,10 +180,29 @@ jobs:
           ./scripts/config -e CONFIG_FUNCTION_TRACER
           ./scripts/config -e CONFIG_JUMP_LABEL
           ./scripts/config -e CONFIG_KALLSYMS
-
+          ./scripts/config -e CONFIG_TUN
+          ./scripts/config -e CONFIG_TAP
+          ./scripts/config -e CONFIG_VXLAN
+          ./scripts/config -e CONFIG_L2TP
+          ./scripts/config -e CONFIG_GRE
+          ./scripts/config -e CONFIG_BRIDGE_VLAN_FILTERING
+          ./scripts/config -e CONFIG_NET_UDP_TUNNEL
+          ./scripts/config -e CONFIG_BPF
+          ./scripts/config -e CONFIG_BPF_SYSCALL
+          ./scripts/config -e CONFIG_BPF_JIT
+          ./scripts/config -e CONFIG_FUNCTION_TRACER
+          ./scripts/config -e CONFIG_JUMP_LABEL
+          ./scripts/config -e CONFIG_KALLSYMS
+          ./scripts/config -e CONFIG_KALLSYMS_ALL
+          ./scripts/config -e CONFIG_FRAME_POINTER
+          ./scripts/config -e CONFIG_FUSE_FS
+          ./scripts/config -e CONFIG_CUSE
+          ./scripts/config -e CONFIG_POSIX_MQUEUE
+          ./scripts/config -e CONFIG_SECCOMP_FILTER
+          ./scripts/config -e CONFIG_KEY_DH_OPERATIONS
           
           make olddefconfig
-
+          make kvm_guest.config
           make -j$(nproc)
           
           mkdir -p /tmp/wsl_out
