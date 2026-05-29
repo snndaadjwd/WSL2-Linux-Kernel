@@ -1,0 +1,175 @@
+name: Build Custom WSL2 Kernel
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    timeout-minutes: 333
+    steps:
+      - name: Install Dependencies
+        run: |
+          pacman -Syu --noconfirm
+          packages=(git base-devel bc bison flex pahole libelf elfutils openssl zstd kmod cpio gawk gcc llvm clang lld ccache patch curl pigz)
+          for pkg in "${packages[@]}"; do pacman -S --noconfirm "$pkg"; done
+
+      - name: Setup ccache
+        run: |
+          mkdir -p /tmp/ccache
+          echo "CCACHE_DIR=/tmp/ccache" >> $GITHUB_ENV
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/ccache
+          key: ${{ runner.os }}-kernel-k501lb-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-kernel-k501lb-
+
+      - name: Build Kernel
+        run: |
+          git clone --depth=1 https://github.com/microsoft/WSL2-Linux-Kernel.git .
+          curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
+          patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
+          export CC="ccache gcc"
+          export CXX="ccache g++"
+          
+          make mrproper
+          cp Microsoft/config-wsl .config
+
+          ./scripts/config -e CONFIG_HYPERV
+          ./scripts/config -e CONFIG_HYPERV_NET
+          ./scripts/config -e CONFIG_HYPERV_STORAGE
+          ./scripts/config -e CONFIG_HYPERV_BALLOON
+          ./scripts/config -e CONFIG_HYPERV_KEYBOARD
+          ./scripts/config -e CONFIG_HYPERV_MOUSE
+          ./scripts/config -e CONFIG_HYPERV_IOMMU
+          ./scripts/config -e CONFIG_HYPERV_TSCNEC
+          ./scripts/config -e CONFIG_MODULES
+          ./scripts/config -e CONFIG_MODULE_UNLOAD
+          ./scripts/config -e CONFIG_MODVERSIONS
+          ./scripts/config -e CONFIG_KERNEL_ZSTD
+          ./scripts/config -e CONFIG_RD_ZSTD
+          ./scripts/config -e CONFIG_CRYPTO_ZSTD
+          ./scripts/config -e CONFIG_ZSTD_COMMON
+          ./scripts/config -e CONFIG_ZSTD_COMPRESS
+          ./scripts/config -e CONFIG_ZSTD_DECOMPRESS
+          ./scripts/config -e CONFIG_PREEMPT_DYNAMIC
+          ./scripts/config -e CONFIG_PREEMPT
+          ./scripts/config -e CONFIG_HZ_1000
+          ./scripts/config -e CONFIG_MCORE2
+          ./scripts/config -e CONFIG_SCHED_AUTOGROUP
+          ./scripts/config -e CONFIG_INTEL_PSTATE
+          ./scripts/config -e CONFIG_SCHED_PRJC
+          ./scripts/config -e CONFIG_ZRAM
+          ./scripts/config -e CONFIG_PSI
+          ./scripts/config -e CONFIG_KSM
+          ./scripts/config -e CONFIG_LRU_GEN
+          ./scripts/config -e CONFIG_LRU_GEN_ENABLED
+          ./scripts/config -e CONFIG_USERFAULTFD
+          ./scripts/config -e CONFIG_CGROUPS
+          ./scripts/config -e CONFIG_CGROUP_V2
+          ./scripts/config -e CONFIG_CGROUP_CPUACCT
+          ./scripts/config -e CONFIG_CGROUP_DEVICE
+          ./scripts/config -e CONFIG_CGROUP_FREEZER
+          ./scripts/config -e CONFIG_CGROUP_PIDS
+          ./scripts/config -e CONFIG_MEMCG
+          ./scripts/config -e CONFIG_MEMCG_SWAP
+          ./scripts/config -e CONFIG_MEMCG_KMEM
+          ./scripts/config -e CONFIG_NAMESPACES
+          ./scripts/config -e CONFIG_UTS_NS
+          ./scripts/config -e CONFIG_IPC_NS
+          ./scripts/config -e CONFIG_PID_NS
+          ./scripts/config -e CONFIG_NET_NS
+          ./scripts/config -e CONFIG_USER_NS
+          ./scripts/config -e CONFIG_OVERLAY_FS
+          ./scripts/config -e CONFIG_VIRTIO_VSOCKETS
+          ./scripts/config -e CONFIG_VIRTIO_BALLOON
+          ./scripts/config -e CONFIG_NETFILTER
+          ./scripts/config -e CONFIG_NF_CONNTRACK
+          ./scripts/config -e CONFIG_BRIDGE_NETFILTER
+          ./scripts/config -e CONFIG_BRIDGE
+          ./scripts/config -e CONFIG_VETH
+          ./scripts/config -e CONFIG_TUN
+          ./scripts/config -e CONFIG_TAP
+          ./scripts/config -e CONFIG_NET_SCHED
+          ./scripts/config -e CONFIG_NET_SCH_FQ_CODEL
+          ./scripts/config -e CONFIG_NET_SCH_CAKE
+          ./scripts/config -e CONFIG_XDP_SOCKETS
+          ./scripts/config -e CONFIG_NET_CLS_BPF
+          ./scripts/config -e CONFIG_IP_NF_NAT
+          ./scripts/config -e CONFIG_IP_NF_TARGET_MASQUERADE
+          ./scripts/config -e CONFIG_BRIDGE_NF_EBTABLES
+          ./scripts/config -e CONFIG_TCP_CONG_BBR
+          ./scripts/config -e CONFIG_DEFAULT_BBR
+          ./scripts/config -e CONFIG_SECCOMP
+          ./scripts/config -e CONFIG_SECCOMP_FILTER
+          ./scripts/config -e CONFIG_KEYS
+          ./scripts/config -e CONFIG_SECURITY
+          ./scripts/config -e CONFIG_SECURITY_APPARMOR
+          ./scripts/config -e CONFIG_SECURITY_SELINUX
+          ./scripts/config -e CONFIG_DRM
+          ./scripts/config -e CONFIG_DRM_VIRTIO_GPU
+          ./scripts/config -e CONFIG_MQ_IOSCHED_KYBER
+          ./scripts/config -e CONFIG_IOSCHED_BFQ
+          ./scripts/config -e CONFIG_BFQ_GROUP_IOSCHED
+          ./scripts/config -e CONFIG_BPF
+          ./scripts/config -e CONFIG_BPF_SYSCALL
+          ./scripts/config -e CONFIG_BPF_JIT
+          ./scripts/config -e CONFIG_FUNCTION_TRACER
+          ./scripts/config -e CONFIG_JUMP_LABEL
+          ./scripts/config -e CONFIG_KALLSYMS
+
+          
+          make olddefconfig
+
+          make -j$(nproc)
+          
+          mkdir -p /tmp/wsl_out
+          cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
+          make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
+          
+          find /tmp/wsl_out/lib/modules -name "*.ko" -exec strip --strip-debug {} +
+          find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
+          find /tmp/wsl_out/lib/modules -name "source" -exec rm -rf {} +
+          
+          cd /tmp/wsl_out
+          tar -cf - lib/ | pigz -p2 > modules.tar.gz
+          rm -rf lib/
+          
+      - name: Run Auto-Test in QEMU
+        run: |
+          pacman -S --noconfirm qemu-system-x86
+          
+          echo "Đang test boot kernel..."
+          
+          timeout 90m qemu-system-x86_64 \
+            -kernel arch/x86/boot/bzImage \
+            -append "console=ttyS0 panic=1 quiet" \
+            -display none \
+            -serial stdio \
+            -smp 4 \
+            -m 1G \
+            -no-reboot
+            
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "SUCCESS: Kernel chạy xong không lỗi!"
+          elif [ $EXIT_CODE -eq 124 ]; then
+            echo "PANIC: Kernel bị treo cứng (Deadlock) sau 90 phút!"
+            exit 1
+          else
+            echo "PANIC: Kernel bị crash với mã lỗi $EXIT_CODE!"
+            echo "--- Dòng log cuối cùng trước khi crash ---"
+            dmesg | tail -n 20 || echo "Không thể lấy log từ hệ thống."
+            exit 1
+          fi
+          
+      - name: Upload Final Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WSL2-Kernel-Custom
+          path: |
+            /tmp/wsl_out/bzImage
+            /tmp/wsl_out/modules.tar.gz
