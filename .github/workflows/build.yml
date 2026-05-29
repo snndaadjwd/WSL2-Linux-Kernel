@@ -201,8 +201,9 @@ jobs:
           ./scripts/config -e CONFIG_SECCOMP_FILTER
           ./scripts/config -e CONFIG_KEY_DH_OPERATIONS
           
-          make olddefconfig
           make kvm_guest.config
+          make olddefconfig
+          
           make -j$(nproc)
           
           mkdir -p /tmp/wsl_out
