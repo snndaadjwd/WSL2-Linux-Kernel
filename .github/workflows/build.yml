@@ -38,6 +38,13 @@ jobs:
           make mrproper
           make KCONFIG_CONFIG=Microsoft/config-wsl kvm_guest.config
           
+          if [ ! -f .config ]; then
+              echo ".config không tồn tại, kiểm tra lại lệnh cấu hình!"
+              exit 1
+          fi
+          
+          echo "Dung lượng đĩa trước khi build:" && df -h
+          
           for conf in CONFIG_HYPERV CONFIG_HYPERV_NET CONFIG_HYPERV_STORAGE CONFIG_HYPERV_BALLOON \
                       CONFIG_HYPERV_IOMMU CONFIG_HYPERV_TSCNEC CONFIG_EXT4_FS CONFIG_9P_FS \
                       CONFIG_SCHED_PRJC CONFIG_PREEMPT_DYNAMIC CONFIG_MODULES CONFIG_MODULE_UNLOAD \
@@ -85,9 +92,8 @@ jobs:
             ./scripts/config -m $conf
           done
           
-          make oldnoconfig
-          ./scripts/kconfig/conf --silentoldconfig Kconfig
-          
+          make olddefconfig
+
           if ! make -j$(nproc) V=1; then
             echo "--- LỖI XUẤT HIỆN: Xuất 100 dòng cuối của file lỗi ---"
             exit 1
@@ -95,22 +101,29 @@ jobs:
           
           mkdir -p /tmp/wsl_out
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
-          mkdir -p /tmp/wsl_out/lib/firmware
-          
-          make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
-          make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
           cp vmlinux /tmp/wsl_out/vmlinux
           cp System.map /tmp/wsl_out/System.map
           cp .config /tmp/wsl_out/config.bak
+          
+          make clean
+          
+          mkdir -p /tmp/wsl_out/lib/firmware
+          make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
+          make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
+          
+          depmod -b /tmp/wsl_out -a
           
           find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
           find /tmp/wsl_out/lib/modules -name "source" -exec rm -rf {} +
           find /tmp/wsl_out/lib/modules -name "*.ko" | xargs -P $(nproc) -I {} strip --strip-debug {}
 
           cd /tmp/wsl_out
+          pigz -9 -p$(nproc) vmlinux
           tar -cf - lib/modules/ | pigz -p$(nproc) > modules.tar.gz
           tar -cf - lib/firmware/ | pigz -p$(nproc) > firmware.tar.gz
           rm -rf lib/
+          
+          echo "Dung lượng đĩa sau khi build và dọn dẹp:" && df -h
           
       - name: Run Auto-Test in QEMU
         run: |
@@ -151,4 +164,5 @@ jobs:
             /tmp/wsl_out/modules.tar.gz
             /tmp/wsl_out/firmware.tar.gz
             /tmp/wsl_out/System.map
-            /tmp/wsl_out/vmlinux
+            /tmp/wsl_out/vmlinux.gz
+            retention-days: 67
