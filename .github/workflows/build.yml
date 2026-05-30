@@ -28,8 +28,10 @@ jobs:
       - name: Build Kernel
         run: |
           git clone --depth=1 https://github.com/microsoft/WSL2-Linux-Kernel.git .
-          curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
-          patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
+          
+          #curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
+          #patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
+          
           export CC="gcc"
           export CXX="g++"
           
@@ -83,17 +85,22 @@ jobs:
             ./scripts/config -m $conf
           done
           
-          make olddefconfig
+          make oldnoconfig
+          ./scripts/kconfig/conf --silentoldconfig Kconfig
           
-          make -j$(nproc) V=1
+          if ! make -j$(nproc) V=1; then
+            echo "--- LỖI XUẤT HIỆN: Xuất 100 dòng cuối của file lỗi ---"
+            exit 1
+          fi
           
           mkdir -p /tmp/wsl_out
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
+          mkdir -p /tmp/wsl_out/lib/firmware
+          
           make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
           make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
           cp vmlinux /tmp/wsl_out/vmlinux
           cp System.map /tmp/wsl_out/System.map
-          cp .config /tmp/wsl_out/config.bak
           cp .config /tmp/wsl_out/config.bak
           
           find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
@@ -101,7 +108,8 @@ jobs:
           find /tmp/wsl_out/lib/modules -name "*.ko" | xargs -P $(nproc) -I {} strip --strip-debug {}
 
           cd /tmp/wsl_out
-          tar -cf - lib/ | pigz -p2 > modules.tar.gz
+          tar -cf - lib/modules/ | pigz -p$(nproc) > modules.tar.gz
+          tar -cf - lib/firmware/ | pigz -p$(nproc) > firmware.tar.gz
           rm -rf lib/
           
       - name: Run Auto-Test in QEMU
@@ -141,3 +149,6 @@ jobs:
           path: |
             /tmp/wsl_out/bzImage
             /tmp/wsl_out/modules.tar.gz
+            /tmp/wsl_out/firmware.tar.gz
+            /tmp/wsl_out/System.map
+            /tmp/wsl_out/vmlinux
