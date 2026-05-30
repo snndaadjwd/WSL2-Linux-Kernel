@@ -85,7 +85,7 @@ jobs:
           
           make olddefconfig
           
-          make -j$(nproc)
+          make -j$(nproc) V=1
           
           mkdir -p /tmp/wsl_out
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
