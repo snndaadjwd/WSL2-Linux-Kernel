@@ -37,6 +37,7 @@ jobs:
           
           make mrproper
           make KCONFIG_CONFIG=Microsoft/config-wsl kvm_guest.config
+          cp Microsoft/config-wsl .config
           
           if [ ! -f .config ]; then
               echo ".config không tồn tại, kiểm tra lại lệnh cấu hình!"
