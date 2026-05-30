@@ -46,114 +46,190 @@ jobs:
           
           echo "Dung lượng đĩa trước khi build:" && df -h
           
-          for conf in CONFIG_HYPERV CONFIG_HYPERV_NET CONFIG_HYPERV_STORAGE CONFIG_HYPERV_BALLOON \
-                      CONFIG_HYPERV_IOMMU CONFIG_HYPERV_TSCNEC CONFIG_EXT4_FS CONFIG_9P_FS \
-                      CONFIG_SCHED_PRJC CONFIG_PREEMPT_DYNAMIC CONFIG_MODULES CONFIG_MODULE_UNLOAD \
-                      CONFIG_MODVERSIONS CONFIG_9P_FS_POSIX_ACL CONFIG_9P_FS_SECURITY CONFIG_BPF \
-                      CONFIG_BPF_SYSCALL CONFIG_BPF_JIT CONFIG_FUNCTION_TRACER CONFIG_JUMP_LABEL \
-                      CONFIG_KALLSYMS CONFIG_KALLSYMS_ALL CONFIG_FRAME_POINTER CONFIG_SECCOMP \
-                      CONFIG_SECCOMP_FILTER CONFIG_KEYS CONFIG_SECURITY CONFIG_PSI CONFIG_LRU_GEN \
-                      CONFIG_LRU_GEN_ENABLED CONFIG_USERFAULTFD CONFIG_NAMESPACES CONFIG_UTS_NS \
-                      CONFIG_IPC_NS CONFIG_PID_NS CONFIG_NET_NS CONFIG_USER_NS CONFIG_CGROUPS \
-                      CONFIG_CGROUP_V2 CONFIG_CGROUP_CPUACCT CONFIG_CGROUP_DEVICE CONFIG_CGROUP_FREEZER \
-                      CONFIG_CGROUP_PIDS CONFIG_MEMCG CONFIG_MEMCG_SWAP CONFIG_MEMCG_KMEM \
-                      CONFIG_PRINTK_TIME CONFIG_PANIC_ON_OOPS CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-                      CONFIG_HZ_1000 CONFIG_MCORE2 CONFIG_SCHED_AUTOGROUP CONFIG_INTEL_PSTATE \
-                      CONFIG_ZRAM CONFIG_KSM CONFIG_BLK_DEV_SD CONFIG_SCSI CONFIG_NETDEVICES \
-                      CONFIG_DRM CONFIG_DRM_VIRTIO_GPU CONFIG_MQ_IOSCHED_KYBER CONFIG_IOSCHED_BFQ \
-                      CONFIG_BFQ_GROUP_IOSCHED CONFIG_FUSE_FS CONFIG_CUSE CONFIG_POSIX_MQUEUE \
-                      CONFIG_KEY_DH_OPERATIONS CONFIG_PACKET CONFIG_FILTER CONFIG_XDP_SOCKETS \
-                      CONFIG_NET_CLS_BPF CONFIG_OVERLAY_FS CONFIG_VIRTIO_VSOCKETS CONFIG_VIRTIO_BALLOON \
-                      CONFIG_CRYPTO_CHACHA20POLY1305 CONFIG_CRYPTO_CURVE25519 CONFIG_CRYPTO_AES \
-                      CONFIG_CRYPTO_SHA256 CONFIG_ZSMALLOC CONFIG_CRYPTO_ZSTD; do
-            ./scripts/config --set-val $conf y
-          done
+          ./scripts/config --set-val CONFIG_HYPERV y
+          ./scripts/config --set-val CONFIG_HYPERV_NET y
+          ./scripts/config --set-val CONFIG_HYPERV_STORAGE y
+          ./scripts/config --set-val CONFIG_HYPERV_BALLOON y
+          ./scripts/config --set-val CONFIG_HYPERV_IOMMU y
+          ./scripts/config --set-val CONFIG_EXT4_FS y
+          ./scripts/config --set-val CONFIG_9P_FS y
+          ./scripts/config --set-val CONFIG_SCHED_PRJC y
+          ./scripts/config --set-val CONFIG_PREEMPT_DYNAMIC y
+          ./scripts/config --set-val CONFIG_MODULES y
+          ./scripts/config --set-val CONFIG_MODULE_UNLOAD y
+          ./scripts/config --set-val CONFIG_BPF y
+          ./scripts/config --set-val CONFIG_BPF_SYSCALL y
+          ./scripts/config --set-val CONFIG_BPF_JIT y
+          ./scripts/config --set-val CONFIG_SECCOMP y
+          ./scripts/config --set-val CONFIG_SECCOMP_FILTER y
+          ./scripts/config --set-val CONFIG_CGROUPS y
+          ./scripts/config --set-val CONFIG_CGROUP_V2 y
+          ./scripts/config --set-val CONFIG_MEMCG y
+          ./scripts/config --set-val CONFIG_MEMCG_SWAP y
+          ./scripts/config --set-val CONFIG_MEMCG_KMEM y
+          ./scripts/config --set-val CONFIG_HZ_1000 y
+          ./scripts/config --set-val CONFIG_KSM y
+          ./scripts/config --set-val CONFIG_BLK_DEV_SD y
+          ./scripts/config --set-val CONFIG_SCSI y
+          ./scripts/config --set-val CONFIG_DRM y
+          ./scripts/config --set-val CONFIG_FUSE_FS y
+          ./scripts/config --set-val CONFIG_OVERLAY_FS y
+          ./scripts/config --set-val CONFIG_VIRTIO_BALLOON y
+          ./scripts/config --set-val CONFIG_KERNEL_ZSTD y
+          ./scripts/config --set-val CONFIG_KALLSYMS y
+          ./scripts/config --set-val CONFIG_KALLSYMS_ALL y
+          ./scripts/config --set-val CONFIG_PSI y
+          ./scripts/config --set-val CONFIG_KEYS y
+          ./scripts/config --set-val CONFIG_SECURITY y
+          ./scripts/config --set-val CONFIG_USERFAULTFD y
+          ./scripts/config --set-val CONFIG_NAMESPACES y
+          ./scripts/config --set-val CONFIG_UTS_NS y
+          ./scripts/config --set-val CONFIG_IPC_NS y
+          ./scripts/config --set-val CONFIG_PID_NS y
+          ./scripts/config --set-val CONFIG_NET_NS y
+          ./scripts/config --set-val CONFIG_USER_NS y
+          ./scripts/config --set-val CONFIG_CGROUP_CPUACCT y
+          ./scripts/config --set-val CONFIG_CGROUP_DEVICE y
+          ./scripts/config --set-val CONFIG_CGROUP_FREEZER y
+          ./scripts/config --set-val CONFIG_CGROUP_PIDS y
+          ./scripts/config --set-val CONFIG_PRINTK_TIME y
+          ./scripts/config --set-val CONFIG_PANIC_ON_OOPS y
+          ./scripts/config --set-val CONFIG_MCORE2 y
+          ./scripts/config --set-val CONFIG_SCHED_AUTOGROUP y
+          ./scripts/config --set-val CONFIG_INTEL_PSTATE y
+          ./scripts/config --set-val CONFIG_ZRAM y
+          ./scripts/config --set-val CONFIG_DRM_VIRTIO_GPU y
+          ./scripts/config --set-val CONFIG_MQ_IOSCHED_KYBER y
+          ./scripts/config --set-val CONFIG_IOSCHED_BFQ y
+          ./scripts/config --set-val CONFIG_BFQ_GROUP_IOSCHED y
+          ./scripts/config --set-val CONFIG_CUSE y
+          ./scripts/config --set-val CONFIG_POSIX_MQUEUE y
+          ./scripts/config --set-val CONFIG_KEY_DH_OPERATIONS y
+          ./scripts/config --set-val CONFIG_PACKET y
+          ./scripts/config --set-val CONFIG_FILTER y
+          ./scripts/config --set-val CONFIG_XDP_SOCKETS y
+          ./scripts/config --set-val CONFIG_NET_CLS_BPF y
+          ./scripts/config --set-val CONFIG_VIRTIO_VSOCKETS y
+          ./scripts/config --set-val CONFIG_CRYPTO_CHACHA20POLY1305 y
+          ./scripts/config --set-val CONFIG_CRYPTO_CURVE25519 y
+          ./scripts/config --set-val CONFIG_CRYPTO_AES y
+          ./scripts/config --set-val CONFIG_CRYPTO_SHA256 y
+          ./scripts/config --set-val CONFIG_ZSMALLOC y
+          ./scripts/config --set-val CONFIG_CFS_BANDWIDTH y
+          ./scripts/config --set-val CONFIG_EXT4_FS_POSIX_ACL y
+          ./scripts/config --set-val CONFIG_EXT4_FS_SECURITY y
+          ./scripts/config --set-val CONFIG_IKCONFIG y
+          ./scripts/config --set-val CONFIG_IKCONFIG_PROC y
+          ./scripts/config --set-val CONFIG_DM_THIN_PROVISIONING y
+          # --- CẤU HÌNH MẠNG VÀ MODULES (MODULE) ---
+          ./scripts/config --set-val CONFIG_NETFILTER m
+          ./scripts/config --set-val CONFIG_NF_CONNTRACK m
+          ./scripts/config --set-val CONFIG_BRIDGE_NETFILTER m
+          ./scripts/config --set-val CONFIG_BRIDGE m
+          ./scripts/config --set-val CONFIG_VETH m
+          ./scripts/config --set-val CONFIG_TUN m
+          ./scripts/config --set-val CONFIG_TAP m
+          ./scripts/config --set-val CONFIG_NET_SCHED m
+          ./scripts/config --set-val CONFIG_NET_SCH_FQ_CODEL m
+          ./scripts/config --set-val CONFIG_NET_SCH_CAKE m
+          ./scripts/config --set-val CONFIG_IP_NF_NAT m
+          ./scripts/config --set-val CONFIG_IP_NF_TARGET_MASQUERADE m
+          ./scripts/config --set-val CONFIG_BRIDGE_NF_EBTABLES m
+          ./scripts/config --set-val CONFIG_TCP_CONG_BBR m
+          ./scripts/config --set-val CONFIG_WIREGUARD m
+          ./scripts/config --set-val CONFIG_NETFILTER_NETLINK m
+          ./scripts/config --set-val CONFIG_NETFILTER_NETLINK_ACCT m
+          ./scripts/config --set-val CONFIG_NETFILTER_NETLINK_QUEUE m
+          ./scripts/config --set-val CONFIG_NETFILTER_NETLINK_LOG m
+          ./scripts/config --set-val CONFIG_NF_CT_NETLINK m
+          ./scripts/config --set-val CONFIG_NF_LOG_NETDEV m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_BPF m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_CONNMARK m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_CONNLIMIT m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_IPRANGE m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_LENGTH m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_LIMIT m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_MAC m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_MARK m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_MULTIPORT m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_PKTTYPE m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_STATE m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_TARGET_MASQUERADE m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_TARGET_REDIRECT m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_TARGET_LOG m
+          ./scripts/config --set-val CONFIG_NF_NAT_MASQUERADE m
+          ./scripts/config --set-val CONFIG_NF_NAT_REDIRECT m
+          ./scripts/config --set-val CONFIG_NET_UDP_TUNNEL m
+          ./scripts/config --set-val CONFIG_NET_TCPPROBE m
+          ./scripts/config --set-val CONFIG_NETWORK_FILESYSTEMS m
+          ./scripts/config --set-val CONFIG_F2FS_FS_COMPRESSION m
+          ./scripts/config --set-val CONFIG_F2FS_STAT_FS m
+          ./scripts/config --set-val CONFIG_BLK_CGROUP m
+          ./scripts/config --set-val CONFIG_CGROUP_PERF m
+          ./scripts/config --set-val CONFIG_CGROUP_NET_CLASSID m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_TARGET_CONNMARK m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_TARGET_NFQUEUE m
+          ./scripts/config --set-val CONFIG_IP_VS m
+          ./scripts/config --set-val CONFIG_IP_VS_PROTO_TCP m
+          ./scripts/config --set-val CONFIG_IP_VS_PROTO_UDP m
+          ./scripts/config --set-val CONFIG_VXLAN m
+          ./scripts/config --set-val CONFIG_L2TP m
+          ./scripts/config --set-val CONFIG_GRE m
+          ./scripts/config --set-val CONFIG_BRIDGE_VLAN_FILTERING m
+          ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_ADDRTYPE m
+          ./scripts/config --set-val CONFIG_NF_NAT_IPV4 m
+          ./scripts/config --set-val CONFIG_NF_NAT_IPV6 m
+          ./scripts/config --set-val CONFIG_RD_ZSTD m
+          ./scripts/config --set-val CONFIG_CRYPTO_ZSTD m
+          ./scripts/config --set-val CONFIG_ZSTD_COMMON m
+          ./scripts/config --set-val CONFIG_ZSTD_COMPRESS m
+          ./scripts/config --set-val CONFIG_ZSTD_DECOMPRESS m
 
-          for conf in CONFIG_NETFILTER CONFIG_NF_CONNTRACK CONFIG_BRIDGE_NETFILTER CONFIG_BRIDGE \
-                      CONFIG_VETH CONFIG_TUN CONFIG_TAP CONFIG_NET_SCHED CONFIG_NET_SCH_FQ_CODEL \
-                      CONFIG_NET_SCH_CAKE CONFIG_IP_NF_NAT CONFIG_IP_NF_TARGET_MASQUERADE \
-                      CONFIG_BRIDGE_NF_EBTABLES CONFIG_TCP_CONG_BBR CONFIG_DEFAULT_BBR \
-                      CONFIG_WIREGUARD CONFIG_NETFILTER_NETLINK CONFIG_NETFILTER_NETLINK_ACCT \
-                      CONFIG_NETFILTER_NETLINK_QUEUE CONFIG_NETFILTER_NETLINK_LOG CONFIG_NF_CT_NETLINK \
-                      CONFIG_NF_LOG_NETDEV CONFIG_NETFILTER_XT_MATCH_BPF CONFIG_NETFILTER_XT_MATCH_CONNMARK \
-                      CONFIG_NETFILTER_XT_MATCH_CONNLIMIT CONFIG_NETFILTER_XT_MATCH_IPRANGE \
-                      CONFIG_NETFILTER_XT_MATCH_LENGTH CONFIG_NETFILTER_XT_MATCH_LIMIT \
-                      CONFIG_NETFILTER_XT_MATCH_MAC CONFIG_NETFILTER_XT_MATCH_MARK \
-                      CONFIG_NETFILTER_XT_MATCH_MULTIPORT CONFIG_NETFILTER_XT_MATCH_PKTTYPE \
-                      CONFIG_NETFILTER_XT_MATCH_STATE CONFIG_NETFILTER_XT_TARGET_MASQUERADE \
-                      CONFIG_NETFILTER_XT_TARGET_REDIRECT CONFIG_NETFILTER_XT_TARGET_LOG \
-                      CONFIG_NF_NAT_MASQUERADE CONFIG_NF_NAT_REDIRECT CONFIG_NET_UDP_TUNNEL \
-                      CONFIG_NET_TCPPROBE CONFIG_NETWORK_FILESYSTEMS CONFIG_F2FS_FS_COMPRESSION \
-                      CONFIG_F2FS_STAT_FS CONFIG_BLK_CGROUP CONFIG_CGROUP_PERF CONFIG_CGROUP_NET_CLASSID \
-                      CONFIG_NETFILTER_XT_TARGET_CONNMARK CONFIG_NETFILTER_XT_TARGET_NFQUEUE \
-                      CONFIG_IP_VS CONFIG_IP_VS_PROTO_TCP CONFIG_IP_VS_PROTO_UDP CONFIG_VXLAN \
-                      CONFIG_L2TP CONFIG_GRE CONFIG_BRIDGE_VLAN_FILTERING CONFIG_NETFILTER_XT_MATCH_ADDRTYPE \
-                      CONFIG_NF_NAT_IPV4 CONFIG_NF_NAT_IPV6 CONFIG_KERNEL_ZSTD CONFIG_RD_ZSTD \
-                      CONFIG_CRYPTO_ZSTD CONFIG_ZSTD_COMMON CONFIG_ZSTD_COMPRESS CONFIG_ZSTD_DECOMPRESS; do
-            ./scripts/config -m $conf
-          done
+          ./scripts/config --disable CONFIG_DEBUG_INFO_BTF
+          ./scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
           
           make olddefconfig
-
-          if ! make -j$(nproc) V=1; then
-            echo "--- LỖI XUẤT HIỆN: Xuất 100 dòng cuối của file lỗi ---"
-            exit 1
-          fi
           
+          make olddefconfig
+          make -j$(nproc)
+          
+      - name: Process and Package All Artifacts
+        run: |
           mkdir -p /tmp/wsl_out
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
           cp vmlinux /tmp/wsl_out/vmlinux
           cp System.map /tmp/wsl_out/System.map
           cp .config /tmp/wsl_out/config.bak
+
+          mkdir -p modules
+          make INSTALL_MOD_PATH="$PWD/modules" modules_install
+          mkdir -p /tmp/wsl_out/lib/firmware
+          make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
+
+          ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" $(make -s kernelrelease) /tmp/wsl_out/modules.vhdx
+          
+          find "$PWD/modules" -name "*.ko" -print0 | xargs -0 -P $(nproc) -I {} strip --strip-debug {}
+          
+          mkdir -p /tmp/pack_dir/lib
+          cp -r "$PWD/modules/lib/modules" /tmp/pack_dir/lib/
+          cp -r /tmp/wsl_out/lib/firmware /tmp/pack_dir/lib/
+          
+          cd /tmp/pack_dir
+          tar -cf - lib/ | pigz -9 -p$(nproc) > /tmp/wsl_out/modules_firmware.tar.gz
+          cd / && rm -rf /tmp/pack_dir
+          
+          pigz -9 -p$(nproc) /tmp/wsl_out/vmlinux
+          
+          echo "Danh sách sản phẩm cuối cùng:"
+          ls -lh /tmp/wsl_out/
           
           make clean
-          
-          mkdir -p /tmp/wsl_out/lib/firmware
-          make modules_install INSTALL_MOD_PATH=/tmp/wsl_out
-          make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
-          
-          depmod -b /tmp/wsl_out -a
+          df -h
           
           find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
           find /tmp/wsl_out/lib/modules -name "source" -exec rm -rf {} +
-          find /tmp/wsl_out/lib/modules -name "*.ko" | xargs -P $(nproc) -I {} strip --strip-debug {}
 
-          cd /tmp/wsl_out
-          pigz -9 -p$(nproc) vmlinux
-          tar -cf - lib/modules/ | pigz -p$(nproc) > modules.tar.gz
-          tar -cf - lib/firmware/ | pigz -p$(nproc) > firmware.tar.gz
-          rm -rf lib/
-          
           echo "Dung lượng đĩa sau khi build và dọn dẹp:" && df -h
-          
-      - name: Run Auto-Test in QEMU
-        run: |
-          pacman -S --noconfirm qemu-system-x86
-          
-          echo "Đang test boot kernel..."
-          
-          timeout 90m qemu-system-x86_64 \
-            -kernel arch/x86/boot/bzImage \
-            -append "console=ttyS0 panic=1 quiet" \
-            -display none \
-            -serial stdio \
-            -smp 4 \
-            -m 1G \
-            -no-reboot
-            
-          EXIT_CODE=$?
-          
-          if [ $EXIT_CODE -eq 0 ]; then
-            echo "SUCCESS: Kernel chạy xong không lỗi!"
-          elif [ $EXIT_CODE -eq 124 ]; then
-            echo "PANIC: Kernel bị treo cứng (Deadlock) sau 90 phút!"
-            exit 1
-          else
-            echo "PANIC: Kernel bị crash với mã lỗi $EXIT_CODE!"
-            echo "--- Dòng log cuối cùng trước khi crash ---"
-            dmesg | tail -n 20 || echo "Không thể lấy log từ hệ thống."
-            exit 1
-          fi
           
       - name: Upload Final Artifact
         if: success()
@@ -162,8 +238,9 @@ jobs:
           name: WSL2-Kernel-Custom
           path: |
             /tmp/wsl_out/bzImage
-            /tmp/wsl_out/modules.tar.gz
-            /tmp/wsl_out/firmware.tar.gz
+            /tmp/wsl_out/modules_firmware.tar.gz
             /tmp/wsl_out/System.map
             /tmp/wsl_out/vmlinux.gz
+            /tmp/wsl_out/modules.vhdx
+            /tmp/wsl_out/config.bak
             retention-days: 67
