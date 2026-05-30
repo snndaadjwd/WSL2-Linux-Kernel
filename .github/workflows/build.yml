@@ -30,8 +30,8 @@ jobs:
           git clone --depth=1 https://github.com/microsoft/WSL2-Linux-Kernel.git .
           curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
           patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
-          export CC="ccache gcc"
-          export CXX="ccache g++"
+          export CC="gcc"
+          export CXX="g++"
           
           make mrproper
           make KCONFIG_CONFIG=Microsoft/config-wsl kvm_guest.config
