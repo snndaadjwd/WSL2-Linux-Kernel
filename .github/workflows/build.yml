@@ -228,7 +228,6 @@ jobs:
           
           pigz -9 -p$(nproc) /tmp/wsl_out/vmlinux
           
-          make clean
           find /tmp/wsl_out -name "build" -type l -delete
           find /tmp/wsl_out -name "source" -type l -delete
 
