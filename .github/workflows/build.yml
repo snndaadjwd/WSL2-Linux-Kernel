@@ -204,7 +204,12 @@ jobs:
           mkdir -p modules
           make INSTALL_MOD_PATH="$PWD/modules" modules_install
           mkdir -p /tmp/wsl_out/lib/firmware
-          make firmware_install INSTALL_FW_PATH=/tmp/wsl_out/lib/firmware
+          mkdir -p /tmp/wsl_out/lib/firmware
+          if [ -d "firmware" ]; then
+              cp -r firmware/* /tmp/wsl_out/lib/firmware/
+          else
+              echo "Thư mục firmware không tồn tại trong source, bỏ qua..."
+          fi
 
           ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" $(make -s kernelrelease) /tmp/wsl_out/modules.vhdx
           
