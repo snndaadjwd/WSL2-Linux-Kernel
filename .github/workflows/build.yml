@@ -4,8 +4,9 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: archlinux:latest
-    options: --privileged
+    container:
+      image: archlinux:latest
+      options: --privileged
     timeout-minutes: 333
     steps:
       - name: Install Dependencies
