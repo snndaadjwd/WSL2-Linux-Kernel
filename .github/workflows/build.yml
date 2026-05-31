@@ -29,8 +29,8 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/microsoft/WSL2-Linux-Kernel.git .
           
-          #curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
-          #patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
+          curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
+          patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
           
           export CC="gcc"
           export CXX="g++"
@@ -47,6 +47,9 @@ jobs:
           echo "Dung lượng đĩa trước khi build:" && df -h
           
           ./scripts/config --set-val CONFIG_HYPERV y
+          ./scripts/config --set-val CONFIG_HYPERV_VMBUS y
+          ./scripts/config --set-val CONFIG_HYPERV_UTILS y
+          ./scripts/config --set-val CONFIG_HYPERV_TIMER y
           ./scripts/config --set-val CONFIG_HYPERV_NET y
           ./scripts/config --set-val CONFIG_HYPERV_STORAGE y
           ./scripts/config --set-val CONFIG_HYPERV_BALLOON y
@@ -121,6 +124,7 @@ jobs:
           ./scripts/config --set-val CONFIG_IKCONFIG y
           ./scripts/config --set-val CONFIG_IKCONFIG_PROC y
           ./scripts/config --set-val CONFIG_DM_THIN_PROVISIONING y
+          ./scripts/config --set-val CONFIG_HZ_1000 y
           # --- CẤU HÌNH MẠNG VÀ MODULES (MODULE) ---
           ./scripts/config --set-val CONFIG_NETFILTER m
           ./scripts/config --set-val CONFIG_NF_CONNTRACK m
@@ -142,6 +146,7 @@ jobs:
           ./scripts/config --set-val CONFIG_NETFILTER_NETLINK_QUEUE m
           ./scripts/config --set-val CONFIG_NETFILTER_NETLINK_LOG m
           ./scripts/config --set-val CONFIG_NF_CT_NETLINK m
+          ./scripts/config --set-val CONFIG_BRIDGE m
           ./scripts/config --set-val CONFIG_NF_LOG_NETDEV m
           ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_BPF m
           ./scripts/config --set-val CONFIG_NETFILTER_XT_MATCH_CONNMARK m
@@ -187,6 +192,8 @@ jobs:
 
           ./scripts/config --disable CONFIG_DEBUG_INFO_BTF
           ./scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
+          ./scripts/config --disable CONFIG_DXGKRNL
+          ./scripts/config --disable CONFIG_DRM
           
           make olddefconfig
           
