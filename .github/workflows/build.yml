@@ -6,13 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
-      options: --privileged
     timeout-minutes: 333
     steps:
       - name: Install Dependencies
         run: |
           pacman -Syu --noconfirm
-          packages=(git base-devel bc bison flex pahole libelf elfutils openssl zstd kmod cpio gawk gcc llvm clang lld ccache patch curl pigz xz lz4 linux-headers glibc gcc-libs zlib perl python python-pip findutils grep sed coreutils util-linux linux-firmware procps-ng iproute2 )
+          packages=(git base-devel bc bison flex pahole libelf elfutils openssl zstd kmod cpio gawk gcc llvm clang lld ccache patch curl pigz xz lz4 linux-headers glibc gcc-libs zlib perl python python-pip findutils grep sed coreutils util-linux linux-firmware procps-ng iproute2)
           for pkg in "${packages[@]}"; do pacman -S --noconfirm "$pkg"; done
 
       - name: Setup ccache
@@ -204,46 +203,37 @@ jobs:
           
       - name: Process and Package All Artifacts
         run: |
+          set -e
           mkdir -p /tmp/wsl_out
           cp arch/x86/boot/bzImage /tmp/wsl_out/bzImage
           cp vmlinux /tmp/wsl_out/vmlinux
           cp System.map /tmp/wsl_out/System.map
           cp .config /tmp/wsl_out/config.bak
 
-          mkdir -p modules
-          make INSTALL_MOD_PATH="$PWD/modules" modules_install
-          mkdir -p /tmp/wsl_out/lib/firmware
-          mkdir -p /tmp/wsl_out/lib/firmware
+          mkdir -p /tmp/wsl_out/lib/modules
+          make INSTALL_MOD_PATH=/tmp/wsl_out modules_install
+          
           if [ -d "firmware" ]; then
+              mkdir -p /tmp/wsl_out/lib/firmware
               cp -r firmware/* /tmp/wsl_out/lib/firmware/
-          else
-              echo "Thư mục firmware không tồn tại trong source, bỏ qua..."
           fi
 
-          ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" $(make -s kernelrelease) /tmp/wsl_out/modules.vhdx
-          
-          find "$PWD/modules" -name "*.ko" -print0 | xargs -0 -P $(nproc) -I {} strip --strip-debug {}
-          
-          mkdir -p /tmp/pack_dir/lib
-          cp -r "$PWD/modules/lib/modules" /tmp/pack_dir/lib/
-          cp -r /tmp/wsl_out/lib/firmware /tmp/pack_dir/lib/
-          
-          cd /tmp/pack_dir
-          tar -cf - lib/ | pigz -9 -p$(nproc) > /tmp/wsl_out/modules_firmware.tar.gz
-          cd / && rm -rf /tmp/pack_dir
+          find /tmp/wsl_out/lib/modules -name "*.ko" -print0 | xargs -0 -P $(nproc) -I {} strip --strip-debug {}
+
+          if [ -d "/tmp/wsl_out/lib" ]; then
+              cd /tmp/wsl_out
+              tar -cf - lib/ | pigz -9 -p$(nproc) > modules_firmware.tar.gz
+              rm -rf lib/
+          fi
           
           pigz -9 -p$(nproc) /tmp/wsl_out/vmlinux
           
-          echo "Danh sách sản phẩm cuối cùng:"
-          ls -lh /tmp/wsl_out/
-          
           make clean
-          df -h
-          
-          find /tmp/wsl_out/lib/modules -name "build" -exec rm -rf {} +
-          find /tmp/wsl_out/lib/modules -name "source" -exec rm -rf {} +
+          find /tmp/wsl_out -name "build" -type l -delete
+          find /tmp/wsl_out -name "source" -type l -delete
 
-          echo "Dung lượng đĩa sau khi build và dọn dẹp:" && df -h
+          df -h
+          ls -lh /tmp/wsl_out/
           
       - name: Upload Final Artifact
         if: success()
@@ -255,6 +245,5 @@ jobs:
             /tmp/wsl_out/modules_firmware.tar.gz
             /tmp/wsl_out/System.map
             /tmp/wsl_out/vmlinux.gz
-            /tmp/wsl_out/modules.vhdx
             /tmp/wsl_out/config.bak
             retention-days: 67
