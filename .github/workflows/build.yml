@@ -8,6 +8,14 @@ jobs:
       image: archlinux:latest
     timeout-minutes: 333
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          repository: snndaadjwd/WSL2-Source-Mirror
+          ref: main
+          token: ${{ secrets.GH_PAT }}
+          path: .
+          
       - name: Install Dependencies
         run: |
           pacman -Syu --noconfirm
@@ -28,7 +36,6 @@ jobs:
 
       - name: Build Kernel
         run: |
-          git clone --depth=1 https://github.com/microsoft/WSL2-Linux-Kernel.git .
           
           curl -L --retry 3 -o prjc.patch https://raw.githubusercontent.com/cachyos/kernel-patches/master/6.18/sched/0001-prjc-cachy.patch
           patch -p1 --ignore-whitespace --fuzz=3 < prjc.patch
@@ -45,9 +52,14 @@ jobs:
               exit 1
           fi
           
+          if [ -d "Microsoft" ]; then
+              make KCONFIG_CONFIG=Microsoft/config-wsl kvm_guest.config
+              cp Microsoft/config-wsl .config
+          fi
+          
           echo "Dung lượng đĩa trước khi build:" && df -h
           
-          ./scripts/kconfig/merge_config.sh -m .config my_config.cfg
+          ./scripts/kconfig/merge_config.sh -m .config config_repo/my_config.cfg
           
           make olddefconfig
           
