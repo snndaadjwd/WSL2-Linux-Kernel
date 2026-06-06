@@ -8,6 +8,13 @@ jobs:
       image: archlinux:latest
     timeout-minutes: 333
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          repository: snndaadjwd/WSL2-Source-Mirror
+          ref: main
+          token: ${{ secrets.GH_PAT }}
+          path: .
       - name: Install Dependencies
         run: |
           pacman -Syu --noconfirm
